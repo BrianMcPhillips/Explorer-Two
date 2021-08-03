@@ -2,8 +2,11 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const cors = require('cors');
+const geoData = require('./data/geo');
 
 app.use(cors());
+
+
 
 app.get('/location', (req, res) => {
   const userInput = req.query.search;
