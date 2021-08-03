@@ -1,0 +1,19 @@
+{
+  "name": "city-explorer",
+  "version": "1.0.0",
+  "description": "App to explore city by name",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrianMcPhillips/Explorer-Two.git"
+  },
+  "author": "Brian McPhillips",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrianMcPhillips/Explorer-Two/issues"
+  },
+  "homepage": "https://github.com/BrianMcPhillips/Explorer-Two#readme"
+}
