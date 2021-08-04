@@ -1,4 +1,4 @@
-export default [
+module.exports = [
    {
        "place_id": "282983083",
        "licence": "https://locationiq.com/attribution",
@@ -189,4 +189,4 @@ export default [
        "importance": 0.4724219600668,
        "icon": "https://locationiq.org/static/images/mapicons/poi_boundary_administrative.p.20.png"
    }
-]
+];
