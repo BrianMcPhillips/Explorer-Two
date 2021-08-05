@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const cors = require('cors');
 const geoData = require('./data/geo');
 const weaData = require('./data/weather');
@@ -34,7 +34,6 @@ app.get('/location', (req, res) => {
     const userInput = req.query.search;
     console.log(userInput);
     const munged = getLetLong(userInput);
-    console.log(munged);
     res.json(munged);
   } catch(e) {
     res.status(500).json({ error: e.message });
@@ -46,7 +45,6 @@ app.get('/weather', (req, res) => {
     const userLat = req.query.latitude;
     const userLon = req.query.longitude;
     const mungedData = getWeather(userLat, userLon);
-    console.log(mungedData);
     res.json(mungedData);
   } catch(e) {
     res.status(500).json({ error: e.message });
