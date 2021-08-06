@@ -3,15 +3,17 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT;
 const cors = require('cors');
+const request = require('superagent');
 const geoData = require('./data/geo');
 const weaData = require('./data/weather');
 
 app.use(cors());
 
-const getLetLong = (input) => {
-  // Todo: make an api call (hard coded for now)
-  const city = geoData[0];
-  return {
+const getLetLong = async(input) => {
+  const response = await request.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.LOCATION_IQ}&q=${input}&format=json`);
+  const city = response.body[0];
+  console.log(city);
+  return { 
     formatted_query: city.display_name,
     latitude: city.lat,
     longitude: city.lon
@@ -30,11 +32,10 @@ const getWeather = (lat, lon) => {
   return forcArray;
 }
 
-app.get('/location', (req, res) => {
+app.get('/location', async(req, res) => {
   try {
     const userInput = req.query.search;
-    console.log(userInput);
-    const munged = getLetLong(userInput);
+    const munged = await getLetLong(userInput);
     res.json(munged);
   } catch(e) {
     res.status(500).json({ error: e.message });
