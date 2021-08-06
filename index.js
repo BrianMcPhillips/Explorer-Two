@@ -20,7 +20,6 @@ const getLetLong = async(input) => {
 const getWeather = async(lat, lon) => {
   const data = await request.get(`https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&units=I&key=${process.env.WEATHER}`);
   const response = data.body.data;
-  console.log(response);
   const forcArray = response.map(weatherItem => {
     return {
       forecast: weatherItem.weather.description,
@@ -28,6 +27,23 @@ const getWeather = async(lat, lon) => {
     }
   });
   return forcArray;
+}
+
+const getReviews = async(lat, lon) => {
+  const data = await request
+    .get(`https://api.yelp.com/v3/businesses/search?latitude=${lat}&longitude=${lon}`)
+    .set('Authorization', 'Bearer ' + process.env.REVIEW);
+  const reviews = data.body.businesses;
+  const revArray = reviews.map(review => {
+    return {
+      name: review.name,
+      image_url: review.image_url,
+      price: review.price,
+      rating: review.rating,
+      url: review.url
+    }
+  });
+  return revArray;
 }
 
 app.get('/location', async(req, res) => {
@@ -45,6 +61,17 @@ app.get('/weather', async(req, res) => {
     const userLat = req.query.latitude;
     const userLon = req.query.longitude;
     const mungedData = await getWeather(userLat, userLon);
+    res.json(mungedData);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/reviews', async(req, res) => {
+  try {
+    const userLat = req.query.latitude;
+    const userLon = req.query.longitude;
+    const mungedData = await getReviews(userLat, userLon);
     res.json(mungedData);
   } catch(e) {
     res.status(500).json({ error: e.message });
