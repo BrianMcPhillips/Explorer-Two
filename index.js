@@ -46,6 +46,26 @@ const getReviews = async(lat, lon) => {
   return revArray;
 }
 
+const getHikes = async(lat, lon) => {
+  const data = await request.get(`https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${lon}&maxDistance=200&key=${process.env.HIKE}`);
+  const hikes = data.body.trails;
+  const hikeArr = hikes.map(hike => {
+    return {
+      name: hike.name,
+      location: hike.location,
+      length: hike.length,
+      stars: hike.stars,
+      star_votes: hike.starVotes,
+      summary: hike.summary,
+      trail_url: hike.url,
+      conditions: hike.conditionStatus,
+      condition_date: hike.conditionDate.split(' ')[0],
+      condition_time: hike.conditionDate.split(' ')[1]
+    }
+  });
+  return hikeArr;
+}
+
 app.get('/location', async(req, res) => {
   try {
     const userInput = req.query.search;
@@ -71,7 +91,18 @@ app.get('/reviews', async(req, res) => {
   try {
     const userLat = req.query.latitude;
     const userLon = req.query.longitude;
-    const mungedData = await getReviews(userLat, userLon);
+    const mungedData = await getHikes(userLat, userLon);
+    res.json(mungedData);
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+app.get('/trails', async(req, res) => {
+  try {
+    const userLat = req.query.latitude;
+    const userLon = req.query.longitude;
+    const mungedData = await getHikes(userLat, userLon);
     res.json(mungedData);
   } catch(e) {
     res.status(500).json({ error: e.message });
